@@ -18,7 +18,8 @@ function getCWuuid($q) {
 	if ($q != ''){
 		$url = 'http://conceptwiki.nbiceng.net/web-ws/concept/search?q=' . urlencode($q) . '&branch=2&limit=1';
 		$json = @file_get_contents($url);
-		$UUIDParts = explode('"', explode('"uuid":"',$json)[1]);
+		$jsonParts = explode('"uuid":"',$json);
+		$UUIDParts = explode('"', ($jsonParts[1]));
 		$uuid = $UUIDParts[0];
 	}
 
@@ -29,7 +30,7 @@ function getMeshId($meshPage) {
 
 	$meshId = '';
 
-	$meshParts = explode('</TD></TR>', explode('<TR><TH align=left>Unique ID</TH><TD colspan=1>',$meshPage)[1]);
+	$meshParts = explode('</TD></TR>', (explode('<TR><TH align=left>Unique ID</TH><TD colspan=1>',$meshPage)[1]));
 	if (is_array($meshParts)){
 		if ($meshParts[0]){
 			$meshId = clearVar($meshParts[0]);
@@ -44,7 +45,7 @@ function getMeshName($meshPage) {
 	$meshName = '';
 
 	// try based on "MeSH Heading"
-	$meshParts = explode('</TD></TR>', explode('<TR><TH align=left>MeSH Heading</TH><TD colspan=1>',$meshPage)[1]);
+	$meshParts = explode('</TD></TR>', (explode('<TR><TH align=left>MeSH Heading</TH><TD colspan=1>',$meshPage)[1]));
 	if (is_array($meshParts)){
 		if ($meshParts[0]){
 			$meshName = $meshParts[0];
@@ -53,7 +54,7 @@ function getMeshName($meshPage) {
 
 	// try based on "Name of Substance"
 	if (!$meshName || $meshName == ''){
-		$meshParts = explode('</TD></TR>', explode('<TR><TH align=left>Name of Substance</TH><TD colspan=1>',$meshPage)[1]);
+		$meshParts = explode('</TD></TR>', (explode('<TR><TH align=left>Name of Substance</TH><TD colspan=1>',$meshPage)[1]));
 		if ($meshParts[0]){
 			$meshName = $meshParts[0];
 		}
@@ -66,7 +67,7 @@ function getMeshEc($meshPage) {
 
 	$meshEc = "";
 
-	$meshParts = explode('</TD></TR>', explode('<TR><TH align=left>Registry Number</TH><TD colspan=1>',$meshPage)[1]);
+	$meshParts = explode('</TD></TR>', (explode('<TR><TH align=left>Registry Number</TH><TD colspan=1>',$meshPage)[1]));
 	if (is_array($meshParts)){
 		if ($meshParts[0]){
 			$meshEc = clearVar($meshParts[0]);
