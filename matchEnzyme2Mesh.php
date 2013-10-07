@@ -169,7 +169,8 @@ foreach ($lines as $idx => $l){
 							$altParts = explode('MB_cgi?mode=&index=', $meshPage);
 							foreach ($altParts as $altPart){
 
-								$indexId = explode('&field', $altPart)[0];
+								$indexIdParts = explode('&field', $altPart);
+								$indexId = $indexIdParts[0];
 								if (str_replace("<TITLE>", "", $indexId) ==  $indexId){
 									// only use the ones with a correct $indexId
 									$possibleRecordUrl = $meshRecordBase . urlencode($indexId);
