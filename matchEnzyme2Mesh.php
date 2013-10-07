@@ -30,7 +30,8 @@ function getMeshId($meshPage) {
 
 	$meshId = '';
 
-	$meshParts = explode('</TD></TR>', (explode('<TR><TH align=left>Unique ID</TH><TD colspan=1>',$meshPage)[1]));
+	$UIDParts = explode('<TR><TH align=left>Unique ID</TH><TD colspan=1>',$meshPage);
+	$meshParts = explode('</TD></TR>', ($UIDParts[1]));
 	if (is_array($meshParts)){
 		if ($meshParts[0]){
 			$meshId = clearVar($meshParts[0]);
@@ -45,7 +46,8 @@ function getMeshName($meshPage) {
 	$meshName = '';
 
 	// try based on "MeSH Heading"
-	$meshParts = explode('</TD></TR>', (explode('<TR><TH align=left>MeSH Heading</TH><TD colspan=1>',$meshPage)[1]));
+	$meshHParts = explode('<TR><TH align=left>MeSH Heading</TH><TD colspan=1>',$meshPage);
+	$meshParts = explode('</TD></TR>', ($meshHParts[1]));
 	if (is_array($meshParts)){
 		if ($meshParts[0]){
 			$meshName = $meshParts[0];
@@ -54,7 +56,8 @@ function getMeshName($meshPage) {
 
 	// try based on "Name of Substance"
 	if (!$meshName || $meshName == ''){
-		$meshParts = explode('</TD></TR>', (explode('<TR><TH align=left>Name of Substance</TH><TD colspan=1>',$meshPage)[1]));
+		$NofSParts = explode('<TR><TH align=left>Name of Substance</TH><TD colspan=1>',$meshPage);
+		$meshParts = explode('</TD></TR>', ($NofSParts[1]));
 		if ($meshParts[0]){
 			$meshName = $meshParts[0];
 		}
@@ -67,7 +70,8 @@ function getMeshEc($meshPage) {
 
 	$meshEc = "";
 
-	$meshParts = explode('</TD></TR>', (explode('<TR><TH align=left>Registry Number</TH><TD colspan=1>',$meshPage)[1]));
+	$mECParts = explode('<TR><TH align=left>Registry Number</TH><TD colspan=1>',$meshPage);
+	$meshParts = explode('</TD></TR>', ($mECParts[1]));
 	if (is_array($meshParts)){
 		if ($meshParts[0]){
 			$meshEc = clearVar($meshParts[0]);
