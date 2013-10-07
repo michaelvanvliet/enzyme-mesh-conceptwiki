@@ -18,7 +18,7 @@ function getCWuuid($q) {
 	if ($q != ''){
 		$url = 'http://conceptwiki.nbiceng.net/web-ws/concept/search?q=' . urlencode($q) . '&branch=2&limit=1';
 		$json = @file_get_contents($url);
-		$UUIDParts = (explode('"', explode('"uuid":"',$json)[1]));
+		$UUIDParts = explode('"', explode('"uuid":"',$json)[1]);
 		$uuid = $UUIDParts[0];
 	}
 
