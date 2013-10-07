@@ -47,7 +47,7 @@ function getMeshName($meshPage) {
 
 	// try based on "MeSH Heading"
 	$meshHParts = explode('<TR><TH align=left>MeSH Heading</TH><TD colspan=1>',$meshPage);
-	$meshParts = explode('</TD></TR>', ($meshHParts[1]));
+	$meshParts = @explode('</TD></TR>', ($meshHParts[1]));
 	if (is_array($meshParts)){
 		if ($meshParts[0]){
 			$meshName = $meshParts[0];
@@ -57,7 +57,7 @@ function getMeshName($meshPage) {
 	// try based on "Name of Substance"
 	if (!$meshName || $meshName == ''){
 		$NofSParts = explode('<TR><TH align=left>Name of Substance</TH><TD colspan=1>',$meshPage);
-		$meshParts = explode('</TD></TR>', ($NofSParts[1]));
+		$meshParts = @explode('</TD></TR>', ($NofSParts[1]));
 		if ($meshParts[0]){
 			$meshName = $meshParts[0];
 		}
@@ -71,7 +71,7 @@ function getMeshEc($meshPage) {
 	$meshEc = "";
 
 	$mECParts = explode('<TR><TH align=left>Registry Number</TH><TD colspan=1>',$meshPage);
-	$meshParts = explode('</TD></TR>', ($mECParts[1]));
+	$meshParts = @explode('</TD></TR>', ($mECParts[1]));
 	if (is_array($meshParts)){
 		if ($meshParts[0]){
 			$meshEc = clearVar($meshParts[0]);
@@ -170,7 +170,7 @@ foreach ($lines as $idx => $l){
 							foreach ($altParts as $altPart){
 
 								$indexIdParts = explode('&field', $altPart);
-								$indexId = $indexIdParts[0];
+								$indexId = @$indexIdParts[0];
 								if (str_replace("<TITLE>", "", $indexId) ==  $indexId){
 									// only use the ones with a correct $indexId
 									$possibleRecordUrl = $meshRecordBase . urlencode($indexId);
