@@ -19,7 +19,7 @@ function getCWuuid($q) {
 		$url = 'http://conceptwiki.nbiceng.net/web-ws/concept/search?q=' . urlencode($q) . '&branch=2&limit=1';
 		$json = @file_get_contents($url);
 		$jsonParts = explode('"uuid":"',$json);
-		$UUIDParts = explode('"', ($jsonParts[1]));
+		$UUIDParts = @explode('"', ($jsonParts[1]));
 		$uuid = $UUIDParts[0];
 	}
 
@@ -31,7 +31,7 @@ function getMeshId($meshPage) {
 	$meshId = '';
 
 	$UIDParts = explode('<TR><TH align=left>Unique ID</TH><TD colspan=1>',$meshPage);
-	$meshParts = explode('</TD></TR>', ($UIDParts[1]));
+	$meshParts = @explode('</TD></TR>', ($UIDParts[1]));
 	if (is_array($meshParts)){
 		if ($meshParts[0]){
 			$meshId = clearVar($meshParts[0]);
