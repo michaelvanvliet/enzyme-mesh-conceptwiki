@@ -216,7 +216,6 @@ foreach ($lines as $idx => $l){
 				// reset
 				$EC = trim($parts[1]);
 				$PREF_LABEL = "";
-				$ALT_LABELS = array();
 			}
 
 			// NAME
