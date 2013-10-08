@@ -18,7 +18,7 @@ function getPage($url){
 	$html = "";
 
 	$urlCode = base64_encode($url);
-	$cacheFilePath = './cache/' . substr($urlCode, 0, 15) . '/' . substr($urlCode, 15, 25) . '/' . substr($urlCode, 25, 35) . '/' . substr($urlCode, 35, 1000);
+	$cacheFilePath = './cache/' . substr($urlCode, 0, 80) . '/' . substr($urlCode, 80, 85) . '/' . substr($urlCode, 85, 150) . '/' . substr($urlCode, 150, 1000);
 	$cacheFile = $cacheFilePath . '/' . $urlCode . '.html';
 
 	// try to fetch it from cache
