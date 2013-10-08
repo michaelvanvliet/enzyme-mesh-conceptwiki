@@ -213,7 +213,7 @@ foreach ($lines as $idx => $l){
 									$args['uuid'] = getCWuuid(getMeshName($meshPage));
 
 									$encodedEntry = base64_encode(serialize($args));
-									if (!in_array($encodedEntry, array_values($entries))){
+									if (!in_array($encodedEntry, $entries)){
 										$args['lineCount'] = $lineCount;
 										writeLine($fp, $args);
 										$entries[] = $encodedEntry;
@@ -235,7 +235,7 @@ foreach ($lines as $idx => $l){
 							$args['uuid'] = getCWuuid(getMeshName($meshPage));
 
 							$encodedEntry = base64_encode(serialize($args));
-							if (!in_array($encodedEntry, array_values($entries))){
+							if (!in_array($encodedEntry, $entries)){
 								$args['lineCount'] = $lineCount;
 								writeLine($fp, $args);
 								$entries[] = $encodedEntry;
