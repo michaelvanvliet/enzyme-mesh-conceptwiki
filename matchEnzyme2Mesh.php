@@ -18,8 +18,8 @@ function getPage($url){
 	$html = "";
 
 	$urlCode = base64_encode($url);
-	$cacheFilePath = './cache/' . substr($urlCode, 0, 80) . '/' . substr($urlCode, 80, 85) . '/' . substr($urlCode, 85, 150) . '/' . substr($urlCode, 150, 1000);
-	$cacheFile = $cacheFilePath . '/' . $urlCode . '.html';
+	$cacheFilePath = './cache/' . substr($urlCode, 0, 80) . '/' . substr($urlCode, 80, 85) . '/' . substr($urlCode, 85, 150);
+	$cacheFile = $cacheFilePath . '/' . trim(substr($urlCode, 150, 1000)) . '.html';
 
 	// try to fetch it from cache
 	if (file_exists($cacheFile)){
