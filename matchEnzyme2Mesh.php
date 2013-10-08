@@ -1,5 +1,7 @@
 <?php
 
+set_time_limit(0); // make sure it doesn't stop on a time-out
+
 function clearVar($toClean) {
 
 	$toClean = trim($toClean);
@@ -11,13 +13,35 @@ function clearVar($toClean) {
 	return $toClean;
 }
 
+function getPage($url){
+
+	$html = "";
+
+	$urlCode = base64_encode($url);
+	$cacheFilePath = './cache/' . substr($urlCode, 0, 15) . '/' . substr($urlCode, 15, 25) . '/' . substr($urlCode, 25, 35) . '/' . substr($urlCode, 35, 1000);
+	$cacheFile = $cacheFilePath . '/' . $urlCode . '.html';
+
+	// try to fetch it from cache
+	if (file_exists($cacheFile)){
+		$html = @file_get_contents($cacheFile);
+	} else {
+		// not cached yet, retrieving and caching
+		@mkdir($cacheFilePath, 0777, true );
+		$html = @file_get_contents($url);
+		$fp = fopen($cacheFile, 'w');
+		fwrite($fp, $html);
+	}
+
+	return $html;
+}
+
 function getCWuuid($q) {
 
 	$uuid = "";
 
 	if ($q != ''){
 		$url = 'http://conceptwiki.nbiceng.net/web-ws/concept/search?q=' . urlencode($q) . '&branch=2&limit=1';
-		$json = @file_get_contents($url);
+		$json = @getPage($url);
 		$jsonParts = explode('"uuid":"',$json);
 		$UUIDParts = @explode('"', ($jsonParts[1]));
 		$uuid = $UUIDParts[0];
@@ -118,7 +142,8 @@ function writeLine($fp, $args) {
 }
 
 // settings
-$limit = 0; //250; // handy for testing
+$limit = 0; //500; // handy for testing
+$entries = array(); // used to prevent duplicate entries
 $meshURLbase = 'http://www.nlm.nih.gov/cgi/mesh/2013/MB_cgi?mode=&term=';
 $meshRecordBase = 'http://www.nlm.nih.gov/cgi/mesh/2013/MB_cgi?mode=&index=';
 
@@ -156,7 +181,7 @@ foreach ($lines as $idx => $l){
 
 					// lookup mesh ID, Name and EC via Mesh html page
 					$lookupUrlPref = $meshURLbase . urlencode(substr(clearVar($PREF_LABEL),0,-1));
-					$meshPage = file_get_contents($lookupUrlPref);
+					$meshPage = getPage($lookupUrlPref);
 
 					if (str_replace("No term found", "", $meshPage) == $meshPage){
 						// see if we have multiple options to choose from
@@ -174,10 +199,9 @@ foreach ($lines as $idx => $l){
 								if (str_replace("<TITLE>", "", $indexId) ==  $indexId){
 									// only use the ones with a correct $indexId
 									$possibleRecordUrl = $meshRecordBase . urlencode($indexId);
-									$meshPage = file_get_contents($possibleRecordUrl);
+									$meshPage = getPage($possibleRecordUrl);
 
 									$args = array();
-									$args['lineCount'] = $lineCount;
 									$args['hasHyphen'] = hasHyphen(getMeshEc($meshPage));
 									$args['type'] = "O";
 									$args['match'] = ecIsMatch($EC, getMeshEc($meshPage));
@@ -188,15 +212,18 @@ foreach ($lines as $idx => $l){
 									$args['meshName'] = getMeshName($meshPage);
 									$args['uuid'] = getCWuuid(getMeshName($meshPage));
 
-									writeLine($fp, $args);
-									$lineCount++;
+									$encodedEntry = base64_encode(serialize($args));
+									if (!in_array($encodedEntry, array_values($entries))){
+										$args['lineCount'] = $lineCount;
+										writeLine($fp, $args);
+										$entries[] = $encodedEntry;
+										$lineCount++;
+									}
 								}
 							}
 						} else {
-
 							// only one page found which we can parse.
 							$args = array();
-							$args['lineCount'] = $lineCount;
 							$args['hasHyphen'] = hasHyphen(getMeshEc($meshPage));
 							$args['type'] = "U";
 							$args['match'] = ecIsMatch($EC, getMeshEc($meshPage));
@@ -207,8 +234,13 @@ foreach ($lines as $idx => $l){
 							$args['meshName'] = getMeshName($meshPage);
 							$args['uuid'] = getCWuuid(getMeshName($meshPage));
 
-							writeLine($fp, $args);
-							$lineCount++;
+							$encodedEntry = base64_encode(serialize($args));
+							if (!in_array($encodedEntry, array_values($entries))){
+								$args['lineCount'] = $lineCount;
+								writeLine($fp, $args);
+								$entries[] = $encodedEntry;
+								$lineCount++;
+							}
 						}
 					}
 				}
