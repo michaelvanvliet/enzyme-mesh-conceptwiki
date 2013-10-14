@@ -183,7 +183,7 @@ foreach ($lines as $idx => $l){
 					$lookupUrlPref = $meshURLbase . urlencode(substr(clearVar($PREF_LABEL),0,-1));
 					$meshPage = getPage($lookupUrlPref);
 
-					if (str_replace("No term found", "", $meshPage) == $meshPage){
+					//if (str_replace("No term found", "", $meshPage) == $meshPage){
 						// see if we have multiple options to choose from
 
 						$possibleRecords = array();
@@ -242,7 +242,7 @@ foreach ($lines as $idx => $l){
 								$lineCount++;
 							}
 						}
-					}
+					//} // string no results
 				}
 
 				// reset
