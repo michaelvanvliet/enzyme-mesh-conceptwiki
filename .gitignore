@@ -1,2 +1,7 @@
 enzymes.tab
 cache
+CW-Scripts/target/classes
+CW-Scripts/target/work/plugin-build-classes
+CW-Scripts/target/work/plugin-classes
+CW-Scripts/target/work
+CW-Scripts/test
